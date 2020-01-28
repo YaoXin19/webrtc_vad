@@ -26,14 +26,14 @@ typedef struct VadInstT_ {
   int vad;
   int32_t downsampling_filter_states[4];
   WebRtcSpl_State48khzTo8khz state_48_to_8;
-  int16_t noise_means[kTableSize];
-  int16_t speech_means[kTableSize];
-  int16_t noise_stds[kTableSize];
-  int16_t speech_stds[kTableSize];
+  int16_t noise_means[kTableSize]; // 需要更新的噪声均值, 6*2=12个
+  int16_t speech_means[kTableSize]; // 需要更新的人声均值, 6*2=12个
+  int16_t noise_stds[kTableSize]; // 需要更新的噪声标准差, 6*2=12个
+  int16_t speech_stds[kTableSize]; // 需要更新的人生标准差, 6*2=12个
   // TODO(bjornv): Change to |frame_count|.
-  int32_t frame_counter;
-  int16_t over_hang;  // Over Hang
-  int16_t num_of_speech;
+  int32_t frame_counter; // Hangover smooth 部分
+  int16_t over_hang;  // Over Hang // Hangover smooth 部分
+  int16_t num_of_speech; // Hangover smooth 部分
   // TODO(bjornv): Change to |age_vector|.
   int16_t index_vector[16 * kNumChannels];
   int16_t low_value_vector[16 * kNumChannels];
@@ -42,10 +42,10 @@ typedef struct VadInstT_ {
   int16_t upper_state[5];
   int16_t lower_state[5];
   int16_t hp_filter_state[4];
-  int16_t over_hang_max_1[3];
-  int16_t over_hang_max_2[3];
-  int16_t individual[3];
-  int16_t total[3];
+  int16_t over_hang_max_1[3]; // 初值，由工作模式决定
+  int16_t over_hang_max_2[3]; // 初值，由工作模式决定
+  int16_t individual[3]; // 初值，由工作模式决定，是似然比某一路的判别门限
+  int16_t total[3]; // 初值，由工作模式决定，是总的似然比的判别门限
 
   int init_flag;
 } VadInstT;
